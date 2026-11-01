@@ -486,6 +486,28 @@ test('PDF içe aktar makes one note per file: create, add the PDF pages once syn
   await expect(page.getByText('PDF içe aktarılamadı')).toHaveCount(0);
 });
 
+test('several PDFs ask like the tablet: separate notes, or one note with every file in order',async({page})=>{
+  const pdfs:string[]=[];let deleted:any=null;
+  const {notes}=await setup(page,async notes=>{
+    await page.route(/\/api\/notes\/new-[^/?]+(\/[^?]*)?(\?.*)?$/,async route=>{
+      const url=new URL(route.request().url()),method=route.request().method(),id=url.pathname.split('/')[3];const note=notes.find(n=>n.id===id);
+      if(method==='GET'&&url.pathname===`/api/notes/${id}`){Object.assign(note,{source:'cloud',syncState:'synced',contentLoaded:true});return route.fulfill({json:{note}});}
+      if(url.pathname.endsWith('/page-ops')&&method==='GET')return route.fulfill({json:{revision:note.revision,editable:true,reason:null,pages:[{id:'blank',index:0,width:1,height:1,hasStrokes:false,deletable:true,reason:null},...pdfs.map((_,i)=>({id:`pdf-${i}`,index:i+1,width:1,height:1,hasStrokes:false,deletable:true,reason:null}))]}});
+      if(url.pathname.endsWith('/page-ops')&&method==='POST'){deleted=route.request().postDataJSON();return route.fulfill({json:{note}});}
+      if(url.pathname.endsWith('/pdf')&&method==='POST'){pdfs.push(url.searchParams.get('name')!);note.revision++;return route.fulfill({json:{note}});}
+      return route.fallback();
+    });
+  });
+  const pdf=(name:string)=>({name,mimeType:'application/pdf',buffer:Buffer.from('%PDF-1.4\n%synthetic\n')});
+  await page.getByLabel('İçe aktarılacak PDF dosyaları').setInputFiles([pdf('Hafta 1.pdf'),pdf('Hafta 2.pdf')]);
+  const dialog=page.getByRole('dialog',{name:'PDF dosyalarını içe aktar'});await expect(dialog).toContainText('2 PDF dosyası seçildi.');
+  await expect(dialog.getByRole('button',{name:'Ayrı notlar oluştur'})).toBeFocused();
+  await dialog.getByRole('button',{name:'Tek notta birleştir'}).click();await expect(dialog).toHaveCount(0);
+  await expect.poll(()=>deleted).not.toBeNull();
+  expect(pdfs).toEqual(['Hafta 1.pdf','Hafta 2.pdf']);expect(deleted.pageIds).toEqual(['blank']);
+  expect(notes.filter(n=>n.id.startsWith('new-')).map(n=>n.title)).toEqual(['Hafta 1']);
+});
+
 test('a busy engine answer (503) retries the thumbnail instead of leaving a placeholder',async({page})=>{
   const png=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/lfoAAAAASUVORK5CYII=','base64');let calls=0;
   await setup(page,async()=>{await page.route('**/api/notes/one/thumbnail?*',route=>{calls++;return calls===1?route.fulfill({status:503,json:{error:{code:'busy',message:'Sentetik meşgul'}}}):route.fulfill({contentType:'image/png',body:png});});});

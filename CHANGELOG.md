@@ -16,7 +16,8 @@ result was also checked in the official app on a phone or tablet.
 ### Added
 
 - "PDF içe aktar" in the note list: each chosen PDF becomes its own note named
-  after the file. It chains steps that were each Cloud-verified on their own
+  after the file; with several files it asks, like the tablet, whether to
+  create separate notes or combine them into one note in the chosen order. It chains steps that were each Cloud-verified on their own
   (create the note, add the PDF pages, drop the blank start page); the chain
   itself is new in this release. Up to 64 MB / 200 pages per file.
 

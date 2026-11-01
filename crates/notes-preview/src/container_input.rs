@@ -860,6 +860,10 @@ pub(crate) mod tests {
 
     #[test]
     fn pending_manifest_retries_until_inventory_is_ready() {
+        // Needs the local ink renderer (tools/ink-renderer); CI jobs without it skip.
+        if !crate::ink::InkBackend::provider_available(&crate::NativeInk::new(crate::env::default_project_root(), None)) {
+            return;
+        }
         let source = rs_store::val::loads(include_str!(
             "../../notes-host/tests/fixtures/ink_objects_base.json"
         ))

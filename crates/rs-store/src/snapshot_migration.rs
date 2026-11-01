@@ -515,13 +515,24 @@ fn vacuum_if_pending(database: &Path) -> Result<()> {
     File::open(parent)?.sync_all()?;
     let mut wal_name = database.as_os_str().to_os_string();
     wal_name.push("-wal");
+    let mut shm_name = database.as_os_str().to_os_string();
+    shm_name.push("-shm");
     match fs::symlink_metadata(Path::new(&wal_name)) {
+        // macOS's system SQLite keeps an empty WAL (and its index) after the
+        // last connection closes; with the connection closed and engine.lock
+        // held, an empty WAL carries no data and is removed.
+        Ok(meta) if meta.file_type().is_file() && meta.len() == 0 => {
+            fs::remove_file(Path::new(&wal_name))?;
+            match fs::remove_file(Path::new(&shm_name)) {
+                Ok(()) => {}
+                Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
+                Err(e) => return Err(e.into()),
+            }
+        }
         Ok(_) => return Err(Error::Value("database WAL remains open during VACUUM".into())),
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => {},
         Err(e) => return Err(e.into()),
     }
-    let mut shm_name = database.as_os_str().to_os_string();
-    shm_name.push("-shm");
     match fs::symlink_metadata(Path::new(&shm_name)) {
         Ok(_) => return Err(Error::Value("database shared memory remains open during VACUUM".into())),
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => {},
