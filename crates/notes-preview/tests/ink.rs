@@ -193,6 +193,8 @@ fn split_rejects_unprovided_pdf_underlay() {
 
 #[test]
 fn manager_ink_layer_is_revision_and_snapshot_bound() {
+    let native = notes_preview::NativeInk::new(notes_preview::env::default_project_root(), None);
+    if !native.provider_available() { return; }
     let dir = TempDir::new();
     let s = store(dir.path());
     let (_, case) = cases().into_iter().find(|(name, _)| name == "fountain18").unwrap();
