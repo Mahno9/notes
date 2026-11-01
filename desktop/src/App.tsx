@@ -415,6 +415,40 @@ function Workspace() {
     acceptMutation(result.note);setStyleMenu(null);
     await Promise.allSettled([refreshList(),refreshStatus()]);
   });
+  // "PDF içe aktar": each file becomes its own note, built only from Cloud
+  // writes that are already verified one by one — create the note, add the PDF
+  // pages once it is synced, then drop the blank page(s) the new note started with.
+  const importPdfInput=useRef<HTMLInputElement|null>(null);
+  const importPdfs=(files:File[])=>run('import-pdf',async()=>{
+    const synced=async(id:string)=>{
+      const deadline=Date.now()+180_000;
+      for(;;){
+        const {note}=await api<{note:Note}>(notePath(id));
+        if(note.source==='cloud'&&note.contentLoaded&&note.syncState==='synced'&&note.metadataSync?.state!=='pending')return note;
+        if(['error','conflict','uncertain'].includes(note.syncState))throw new Error('PDF içe aktarılamadı: not buluta gönderilemedi.');
+        if(Date.now()>deadline)throw new Error('PDF içe aktarılamadı: not zamanında eşitlenmedi. Bağlantınızı kontrol edip yeniden deneyin.');
+        await new Promise(resolve=>setTimeout(resolve,1000));
+      }
+    };
+    for(const file of files){
+      if(file.size>64*1024*1024)throw new Error(`${file.name}: PDF en fazla 64 MB olabilir.`);
+      const title=file.name.replace(/\.pdf$/i,'').slice(0,100);
+      const rich=(status??await refreshStatus()).capabilities.richTextEditing;
+      const {note:created}=rich?await api<{note:Note}>('/api/notes/editor','POST',{title,model:{schemaVersion:1,text:'',spans:[],paragraphs:[]}}):await api<{note:Note}>('/api/notes','POST',{title,body:''});
+      setNotes(previous=>[created,...previous]);
+      let note=await synced(created.id);
+      const blank=(await api<PageOpsInfo>(notePath(note.id)+'/page-ops')).pages;
+      const bytes=await file.arrayBuffer();
+      const response=await request(`${notePath(note.id)}/pdf?revision=${note.revision}&name=${encodeURIComponent(file.name)}`,{method:'POST',body:bytes,headers:{'Content-Type':'application/pdf'}});
+      note=(await response.json() as {note:Note}).note;
+      note=await synced(note.id);
+      const info=await api<PageOpsInfo>(notePath(note.id)+'/page-ops');
+      const drop=blank.filter(page=>!page.hasStrokes).map(page=>page.id).filter(id=>info.pages.some(page=>page.id===id&&page.deletable));
+      if(drop.length&&drop.length<info.pages.length){await api(notePath(note.id)+'/page-ops','POST',{op:'delete',pageIds:drop,expectedRevision:info.revision});}
+      await refreshList();
+    }
+    await refreshStatus();
+  });
   const insertPdf=(file:File)=>run('pdf',async()=>{
     if(!detail)return;
     if(ink.hasDraft(detail.id)||ink.anySaving)throw new Error('Önce çizim taslağınızı kaydedin.');
@@ -667,7 +701,7 @@ function Workspace() {
       <div className="drawer-bottom"><div className="drawer-separator"/><button className="nav-item" onClick={()=>setSettings(true)}><WinIcon name="ic_drawer_setting"/><span>Ayarlar</span>{status?.connected?<Cloud size={15}/>:<CloudOff size={15}/>}</button></div>
     </aside>
     <section className="note-list" aria-label="Not listesi">
-      <header className="list-header"><div className="list-title">{drawerCollapsed&&<button className="icon-button" aria-label="Menüyü aç" onClick={()=>setDrawerCollapsed(false)}><Menu size={20}/></button>}<button className="icon-button mobile-only" aria-label="Menüyü aç" onClick={()=>setSidebar(true)}><Menu size={20}/></button>{currentTrashFolder&&<button className="icon-button" aria-label="Çöp kutusuna dön" title="Geri" onClick={()=>chooseTrashFolder(trashParent(currentTrashFolder))}><ArrowLeft size={18}/></button>}<h1>{currentTrashFolder?.name||currentFolder?.name||currentNav.label}</h1>{currentTrashFolder?.state==='trashed'&&<button className="small-button" disabled={!folderReady(currentTrashFolder)} onClick={()=>editFolder('restore',currentTrashFolder)}>Klasörü geri yükle</button>}</div><div className="list-commandbar">{!trashReadOnly&&<><button className="command-button" aria-label="Yeni not" onClick={()=>void create()} disabled={!!busy}><SquarePen size={17}/><span>Not oluştur</span></button><button className="command-button optional-command" aria-label="PDF içe aktar" disabled title="PDF içe aktarma henüz desteklenmiyor"><WinIcon name="ac_ic_main_pdf"/><span>PDF içe aktar</span></button><button className={`command-button ${selectionMode?'active':''}`} onClick={()=>{setSelectionMode(!selectionMode);setSelectedCards(new Set());}}><CircleCheck size={17}/><span>{selectionMode?'Bitti':'Düzenle'}</span></button></>}<div className="dropdown-anchor"><button className="command-button" onClick={()=>setViewMenu(!viewMenu)} aria-expanded={viewMenu}><Grid3X3 size={17}/><span>Görünüm</span></button>{viewMenu&&<div className="dropdown view-menu"><button onClick={()=>{setGalleryMode('grid');setViewMenu(false);}}><Grid3X3 size={15}/>Izgara görünümü</button><button onClick={()=>{setGalleryMode('list');setViewMenu(false);}}><List size={15}/>Liste görünümü</button><hr/>{navItems.filter(n=>n.id!=='trash').map(({id,label,icon:Icon})=><button key={id} onClick={()=>{chooseFilter(id);setViewMenu(false);}}><Icon size={15}/>{label}</button>)}</div>}</div><label className="search"><input ref={searchRef} value={query} onChange={e=>setQuery(e.target.value)} placeholder="Ara" aria-label="Notlarında ara"/>{query?<button className="icon-button" onClick={()=>setQuery('')} aria-label="Aramayı temizle"><X size={16}/></button>:<Search size={17}/>}</label></div></header>
+      <header className="list-header"><div className="list-title">{drawerCollapsed&&<button className="icon-button" aria-label="Menüyü aç" onClick={()=>setDrawerCollapsed(false)}><Menu size={20}/></button>}<button className="icon-button mobile-only" aria-label="Menüyü aç" onClick={()=>setSidebar(true)}><Menu size={20}/></button>{currentTrashFolder&&<button className="icon-button" aria-label="Çöp kutusuna dön" title="Geri" onClick={()=>chooseTrashFolder(trashParent(currentTrashFolder))}><ArrowLeft size={18}/></button>}<h1>{currentTrashFolder?.name||currentFolder?.name||currentNav.label}</h1>{currentTrashFolder?.state==='trashed'&&<button className="small-button" disabled={!folderReady(currentTrashFolder)} onClick={()=>editFolder('restore',currentTrashFolder)}>Klasörü geri yükle</button>}</div><div className="list-commandbar">{!trashReadOnly&&<><button className="command-button" aria-label="Yeni not" onClick={()=>void create()} disabled={!!busy}><SquarePen size={17}/><span>Not oluştur</span></button><button className="command-button optional-command" aria-label="PDF içe aktar" disabled={!!busy} onClick={()=>importPdfInput.current?.click()}><WinIcon name="ac_ic_main_pdf"/><span>PDF içe aktar</span></button><input ref={importPdfInput} type="file" accept="application/pdf,.pdf" multiple hidden aria-label="İçe aktarılacak PDF dosyaları" onChange={e=>{const files=[...(e.target.files??[])];e.target.value='';if(files.length)importPdfs(files);}}/><button className={`command-button ${selectionMode?'active':''}`} onClick={()=>{setSelectionMode(!selectionMode);setSelectedCards(new Set());}}><CircleCheck size={17}/><span>{selectionMode?'Bitti':'Düzenle'}</span></button></>}<div className="dropdown-anchor"><button className="command-button" onClick={()=>setViewMenu(!viewMenu)} aria-expanded={viewMenu}><Grid3X3 size={17}/><span>Görünüm</span></button>{viewMenu&&<div className="dropdown view-menu"><button onClick={()=>{setGalleryMode('grid');setViewMenu(false);}}><Grid3X3 size={15}/>Izgara görünümü</button><button onClick={()=>{setGalleryMode('list');setViewMenu(false);}}><List size={15}/>Liste görünümü</button><hr/>{navItems.filter(n=>n.id!=='trash').map(({id,label,icon:Icon})=><button key={id} onClick={()=>{chooseFilter(id);setViewMenu(false);}}><Icon size={15}/>{label}</button>)}</div>}</div><label className="search"><input ref={searchRef} value={query} onChange={e=>setQuery(e.target.value)} placeholder="Ara" aria-label="Notlarında ara"/>{query?<button className="icon-button" onClick={()=>setQuery('')} aria-label="Aramayı temizle"><X size={16}/></button>:<Search size={17}/>}</label></div></header>
       <div className="list-order"><span className="library-status"/><div><button className="sort-button" onClick={()=>setSortAscending(!sortAscending)}><WinIcon name="sort_by" size={18}/>Değiştirilme tarihi</button><span className="sort-separator"/><button className="icon-button" aria-label="Sıralama yönünü değiştir" onClick={()=>setSortAscending(!sortAscending)}>{sortAscending?<ArrowUp size={18}/>:<ArrowDown size={18}/>}</button></div></div>
       {selectionMode&&<div className="selection-bar"><span>{selectedCards.size} not seçildi</span><button onClick={()=>setSelectedCards(new Set(orderedNotes.map(n=>n.id)))}>Tümünü seç</button><button disabled={!!busy||!!selectionReason({favorite:true})} title={selectionReason({favorite:true})||'Samsung Cloud favorilerini güncelle'} onClick={()=>void organizeSelection({favorite:true})}><WinIcon name="ic_drawer_favorite" size={17}/>Favorilere ekle</button><button disabled={!!busy||!!selectionReason({trashed:filter!=='trash'})} title={selectionReason({trashed:filter!=='trash'})||'Samsung Cloud çöp kutusunu güncelle'} onClick={()=>void organizeSelection({trashed:filter!=='trash'})}><WinIcon name="ic_drawer_delete" size={17}/>{filter==='trash'?'Geri yükle':'Çöp kutusuna taşı'}</button><button disabled={!!busy||!!selectionReason({folderId:null})} title={selectionReason({folderId:null})||'Samsung Cloud klasörüne taşı'} onClick={()=>openMove([...selectedCards])}><Folder size={17}/>Klasöre taşı</button></div>}
       {pollError&&<div className="alert warning" role="status"><CloudOff size={17}/><span>{pollError}</span></div>}

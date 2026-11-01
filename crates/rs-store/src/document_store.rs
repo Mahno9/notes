@@ -197,10 +197,11 @@ impl DocumentStore {
                 "document lock must be a private regular file owned by the user".into(),
             ));
         }
-        // SAFETY: flock operates on this valid owned file descriptor; dropping
-        // the File releases the advisory lock, including on error or panic.
         loop {
-            if unsafe { libc::flock(std::os::fd::AsRawFd::as_raw_fd(&lock), libc::LOCK_EX) } == 0 {
+            // SAFETY: flock operates on this valid owned file descriptor; dropping
+            // the File releases the advisory lock, including on error or panic.
+            let locked = unsafe { libc::flock(std::os::fd::AsRawFd::as_raw_fd(&lock), libc::LOCK_EX) };
+            if locked == 0 {
                 break;
             }
             let error = io::Error::last_os_error();

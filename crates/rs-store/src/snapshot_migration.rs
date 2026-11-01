@@ -466,7 +466,7 @@ fn verify_committed(store: &DocumentStore, database: &Path, verifier: &dyn Proje
 /// atomic rename. Caller holds both engine.lock and the publication lock.
 fn vacuum_if_pending(database: &Path) -> Result<()> {
     use std::fs::{self, File, OpenOptions};
-    use std::os::unix::fs::{MetadataExt, OpenOptionsExt};
+    use std::os::unix::fs::{MetadataExt, PermissionsExt};
     let conn = rusqlite::Connection::open(database)?;
     conn.busy_timeout(std::time::Duration::from_secs(5))?;
     let pending: bool = conn.query_row(
@@ -483,7 +483,9 @@ fn vacuum_if_pending(database: &Path) -> Result<()> {
         Ok(meta) => {
             // SAFETY: getuid has no preconditions.
             let uid = unsafe { libc::getuid() };
-            if !meta.file_type().is_file() || meta.uid() != uid || meta.mode() & 0o077 != 0 {
+            // A leftover from an interrupted run may still carry SQLite's default
+            // mode; the data directory itself is private (0700).
+            if !meta.file_type().is_file() || meta.uid() != uid {
                 return Err(Error::Value("unsafe pending VACUUM file".into()));
             }
             fs::remove_file(&temp)?;
@@ -491,10 +493,15 @@ fn vacuum_if_pending(database: &Path) -> Result<()> {
         Err(e) if e.kind() == std::io::ErrorKind::NotFound => {},
         Err(e) => return Err(e.into()),
     }
-    let temp_file = OpenOptions::new().write(true).create_new(true).mode(0o600)
-        .custom_flags(libc::O_NOFOLLOW).open(&temp)?;
-    drop(temp_file);
+    // VACUUM INTO must create the file itself: older SQLite (macOS system
+    // library) refuses an existing target, even an empty one.
     conn.execute("VACUUM INTO ?", [temp.to_str().ok_or_else(|| Error::Value("invalid database path".into()))?])?;
+    let created = fs::symlink_metadata(&temp)?;
+    // SAFETY: getuid has no preconditions.
+    if !created.file_type().is_file() || created.uid() != unsafe { libc::getuid() } {
+        return Err(Error::Value("unsafe VACUUM file".into()));
+    }
+    fs::set_permissions(&temp, fs::Permissions::from_mode(0o600))?;
     conn.close().map_err(|(_, e)| Error::from(e))?;
     let candidate = rusqlite::Connection::open_with_flags(&temp, rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY)?;
     let integrity: String = candidate.query_row("PRAGMA integrity_check", [], |row| row.get(0))?;

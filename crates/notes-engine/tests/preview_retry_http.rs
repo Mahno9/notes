@@ -266,6 +266,10 @@ fn traced_fixture() -> Val {
 
 #[test]
 fn http_preview_reads_only_selected_page_entries() {
+    // Needs the local ink renderer (tools/ink-renderer); CI jobs without it skip.
+    if !notes_preview::ink::InkBackend::provider_available(&notes_preview::NativeInk::new(notes_preview::env::default_project_root(), None)) {
+        return;
+    }
     use rs_store::db::Sql;
     let temp = common::TempDir::new("preview-two-entries-http");
     let store = StoreCore::open(temp.path()).unwrap();

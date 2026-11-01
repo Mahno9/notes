@@ -11,6 +11,15 @@ result was also checked in the official app on a phone or tablet.
 
 ## [Unreleased]
 
+## [0.0.4-alpha] - 2026-11-01
+
+### Added
+
+- "PDF içe aktar" in the note list: each chosen PDF becomes its own note named
+  after the file. It chains steps that were each Cloud-verified on their own
+  (create the note, add the PDF pages, drop the blank start page); the chain
+  itself is new in this release. Up to 64 MB / 200 pages per file.
+
 ### Changed
 
 - Notes are stored like the mobile app: one .sdocx-style container per note
@@ -142,7 +151,8 @@ The user interface is in Turkish.
 - Previews of pictures, shapes and text boxes are drawn by this client and are
   close to, not identical with, the official renderer.
 
-[Unreleased]: https://github.com/Tunahanyrd/notes/compare/v0.0.3-alpha...HEAD
+[Unreleased]: https://github.com/Tunahanyrd/notes/compare/v0.0.4-alpha...HEAD
+[0.0.4-alpha]: https://github.com/Tunahanyrd/notes/compare/v0.0.3-alpha...v0.0.4-alpha
 [0.0.3-alpha]: https://github.com/Tunahanyrd/notes/compare/v0.0.2-alpha...v0.0.3-alpha
 [0.0.2-alpha]: https://github.com/Tunahanyrd/notes/compare/v0.0.1-alpha...v0.0.2-alpha
 [0.0.1-alpha]: https://github.com/Tunahanyrd/notes/releases/tag/v0.0.1-alpha

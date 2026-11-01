@@ -129,7 +129,7 @@ test('cursors follow Windows: arrow on buttons, I-beam on text, hand on links, n
   expect(await cursor(page.getByRole('button',{name:'Not oluştur'}).or(page.getByRole('button',{name:'Yeni not'})).first())).toBe('default');
   expect(await cursor(page.getByRole('button',{name:/Alışveriş/}))).toBe('default');
   expect(await cursor(page.getByLabel('Notlarında ara'))).toBe('text');
-  expect(await cursor(page.getByRole('button',{name:'PDF içe aktar'}))).toBe('not-allowed');
+  expect(await cursor(page.getByRole('button',{name:'PDF içe aktar'}))).toBe('default');
   await page.getByRole('button',{name:/Alışveriş/}).click();
   const editor=page.getByRole('textbox',{name:'Not içeriği'});await expect(editor).toHaveAttribute('contenteditable','true');
   expect(await cursor(editor)).toBe('text');
