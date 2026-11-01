@@ -252,7 +252,7 @@ def start_server(prefix, layout, log_path):
                         status = json.loads(body)
                         migration = status.get('migration')
                         if not migration: return process, value
-                        if migration.get('state') == 'failed': raise RuntimeError('storage migration failed')
+                        if migration.get('state') == 'failed': raise RuntimeError(f'storage migration failed; log: {log_path}\n' + _tail(log_path))
                 finally:
                     conn.close()
         except (OSError, ValueError, http.client.HTTPException):
