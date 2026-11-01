@@ -24,7 +24,7 @@ rusqlite = "=0.41.0"
 sha2 = { workspace = true, features = ["std"] }
 serde.workspace = true
 serde_json.workspace = true
-zip = { version = "=8.2.0", default-features = false, features = ["deflate-flate2-zlib-rs"] }
+zip = { version = "=9.2.0", default-features = false, features = ["deflate-flate2-zlib-rs"] }
 zstd = { version = "=0.14.3", default-features = false }
 uuid = { version = "=1.29.0", features = ["v4"] }
 

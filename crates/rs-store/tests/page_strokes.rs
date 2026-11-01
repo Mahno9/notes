@@ -220,7 +220,7 @@ fn modified_manifest_is_detected_even_when_page_and_context_are_unchanged() {
     let mut writer = zip::ZipWriter::new(Cursor::new(Vec::new()));
     for i in 0..archive.len() {
         let mut entry = archive.by_index(i).unwrap();
-        if entry.name() == "cloud/manifest.json" {
+        if entry.name().unwrap() == "cloud/manifest.json" {
             let mut bytes = Vec::new();
             entry.read_to_end(&mut bytes).unwrap();
             let mut value: serde_json::Value = serde_json::from_slice(&bytes).unwrap();

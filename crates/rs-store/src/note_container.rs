@@ -375,6 +375,7 @@ pub(crate) fn archive<R: Read + Seek>(mut reader: R) -> Result<ZipArchive<Direct
         return Err("oversized or unsupported ZIP".into());
     }
     for name in z.file_names() {
+        let name = name.map_err(|_| "invalid ZIP entry name")?;
         if name.starts_with('/')
             || name
                 .split('/')
@@ -1372,7 +1373,7 @@ mod tests {
         let opts = SimpleFileOptions::default().compression_method(CompressionMethod::Deflated);
         for i in 0..old.len() {
             let file = old.by_index(i).unwrap();
-            if file.name() == "pageIdInfo.dat" {
+            if file.name().unwrap() == "pageIdInfo.dat" {
                 drop(file);
                 output.start_file("pageIdInfo.dat", opts).unwrap();
                 output.write_all(b"corrupt old page index").unwrap();
@@ -1436,7 +1437,7 @@ mod tests {
         let options = SimpleFileOptions::default().compression_method(CompressionMethod::Deflated);
         for i in 0..z.len() {
             let f = z.by_index(i).unwrap();
-            let name = f.name().to_string();
+            let name = f.name().unwrap().to_string();
             if name == "p2.page" || name == "cloud/manifest.json" {
                 drop(f);
                 writer.start_file(&name, options).unwrap();
@@ -1529,7 +1530,7 @@ mod tests {
         let opts = SimpleFileOptions::default().compression_method(CompressionMethod::Deflated);
         for i in 0..z.len() {
             let file = z.by_index(i).unwrap();
-            let name = file.name().to_string();
+            let name = file.name().unwrap().to_string();
             if name == "cloud/note.xml" || name == "cloud/manifest.json" {
                 drop(file);
                 w.start_file(&name, opts).unwrap();

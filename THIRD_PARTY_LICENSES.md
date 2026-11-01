@@ -17,10 +17,10 @@ separate program), bubblewrap (LGPL-2.0+, separate program).
 
 ## Rust: Rust engine workspace
 
-Lock file: `Cargo.lock` (130 packages)
+Lock file: `Cargo.lock` (133 packages)
 
-- MIT OR Apache-2.0: 81
-- MIT: 17
+- MIT OR Apache-2.0: 82
+- MIT: 19
 - Apache-2.0 OR MIT: 12
 - BSD-3-Clause: 5
 - Unlicense OR MIT: 3
@@ -50,6 +50,7 @@ Lock file: `Cargo.lock` (130 packages)
 | byteorder-lite | 0.1.0 | Unlicense OR MIT | crates.io |
 | cc | 1.10.0 | MIT OR Apache-2.0 | crates.io |
 | cfg-if | 1.0.5 | MIT OR Apache-2.0 | crates.io |
+| cfg_aliases | 0.2.2 | MIT | crates.io |
 | color_quant | 1.1.0 | MIT | crates.io |
 | const-oid | 0.10.2 | Apache-2.0 OR MIT | crates.io |
 | cpufeatures | 0.2.17 | MIT OR Apache-2.0 | crates.io |
@@ -96,6 +97,7 @@ Lock file: `Cargo.lock` (130 packages)
 | memchr | 2.8.3 | Unlicense OR MIT | crates.io |
 | miniz_oxide | 0.8.9 | MIT OR Zlib OR Apache-2.0 | crates.io |
 | miniz_oxide | 0.9.1 | MIT OR Zlib OR Apache-2.0 | crates.io |
+| nix | 0.31.3 | MIT | crates.io |
 | num-traits | 0.2.19 | MIT OR Apache-2.0 | crates.io |
 | once_cell | 1.21.4 | MIT OR Apache-2.0 | crates.io |
 | openssl | 0.10.81 | Apache-2.0 | crates.io |
@@ -144,7 +146,7 @@ Lock file: `Cargo.lock` (130 packages)
 | thiserror-impl | 2.0.21 | MIT OR Apache-2.0 | crates.io |
 | tiny-skia | 0.12.0 | BSD-3-Clause | crates.io |
 | tiny-skia-path | 0.12.0 | BSD-3-Clause | crates.io |
-| typed-path | 0.12.4 | MIT OR Apache-2.0 | crates.io |
+| typed-path | 0.13.0 | MIT OR Apache-2.0 | crates.io |
 | typenum | 1.20.1 | MIT OR Apache-2.0 | crates.io |
 | unicode-ident | 1.0.27 | (MIT OR Apache-2.0) AND Unicode-3.0 | crates.io |
 | usvg | 0.49.0 | Apache-2.0 OR MIT | crates.io |
@@ -157,8 +159,9 @@ Lock file: `Cargo.lock` (130 packages)
 | wasm-bindgen-shared | 0.2.127 | MIT OR Apache-2.0 | crates.io |
 | weezl | 0.1.12 | MIT OR Apache-2.0 | crates.io |
 | windows-link | 0.2.1 | MIT OR Apache-2.0 | crates.io |
+| windows-sys | 0.61.2 | MIT OR Apache-2.0 | crates.io |
 | zeroize | 1.9.1 | Apache-2.0 OR MIT | crates.io |
-| zip | 8.2.0 | MIT | crates.io |
+| zip | 9.2.0 | MIT | crates.io |
 | zlib-rs | 0.6.8 | Zlib | crates.io |
 | zmij | 1.0.23 | MIT | crates.io |
 | zstd | 0.14.3 | BSD-3-Clause | crates.io |
@@ -169,10 +172,10 @@ Lock file: `Cargo.lock` (130 packages)
 
 ## Rust: Tauri desktop shell
 
-Lock file: `desktop/src-tauri/Cargo.lock` (469 packages)
+Lock file: `desktop/src-tauri/Cargo.lock` (471 packages)
 
 - MIT OR Apache-2.0: 230
-- MIT: 111
+- MIT: 113
 - Apache-2.0 OR MIT: 40
 - Unicode-3.0: 18
 - Zlib OR Apache-2.0 OR MIT: 17
@@ -239,6 +242,7 @@ Lock file: `desktop/src-tauri/Cargo.lock` (469 packages)
 | cfb | 0.14.0 | MIT | crates.io |
 | cfg-expr | 0.15.8 | MIT OR Apache-2.0 | crates.io |
 | cfg-if | 1.0.5 | MIT OR Apache-2.0 | crates.io |
+| cfg_aliases | 0.2.2 | MIT | crates.io |
 | chrono | 0.4.45 | MIT OR Apache-2.0 | crates.io |
 | color_quant | 1.1.0 | MIT | crates.io |
 | combine | 4.6.9 | MIT | crates.io |
@@ -411,6 +415,7 @@ Lock file: `desktop/src-tauri/Cargo.lock` (469 packages)
 | ndk-context | 0.1.1 | MIT OR Apache-2.0 | crates.io |
 | ndk-sys | 0.6.0+11769913 | MIT OR Apache-2.0 | crates.io |
 | new_debug_unreachable | 1.0.6 | MIT | crates.io |
+| nix | 0.31.3 | MIT | crates.io |
 | num-conv | 0.2.2 | MIT OR Apache-2.0 | crates.io |
 | num-traits | 0.2.19 | MIT OR Apache-2.0 | crates.io |
 | num_enum | 0.7.6 | BSD-3-Clause OR MIT OR Apache-2.0 | crates.io |
@@ -582,7 +587,7 @@ Lock file: `desktop/src-tauri/Cargo.lock` (469 packages)
 | tracing-core | 0.1.36 | MIT | crates.io |
 | tray-icon | 0.25.1 | MIT OR Apache-2.0 | crates.io |
 | try-lock | 0.2.5 | MIT | crates.io |
-| typed-path | 0.12.4 | MIT OR Apache-2.0 | crates.io |
+| typed-path | 0.13.0 | MIT OR Apache-2.0 | crates.io |
 | typeid | 1.0.3 | MIT OR Apache-2.0 | crates.io |
 | typenum | 1.20.1 | MIT OR Apache-2.0 | crates.io |
 | unicode-ident | 1.0.27 | (MIT OR Apache-2.0) AND Unicode-3.0 | crates.io |
@@ -659,7 +664,7 @@ Lock file: `desktop/src-tauri/Cargo.lock` (469 packages)
 | zerotrie | 0.2.5 | Unicode-3.0 | crates.io |
 | zerovec | 0.11.9 | Unicode-3.0 | crates.io |
 | zerovec-derive | 0.11.7 | Unicode-3.0 | crates.io |
-| zip | 8.2.0 | MIT | crates.io |
+| zip | 9.2.0 | MIT | crates.io |
 | zlib-rs | 0.6.8 | Zlib | crates.io |
 | zmij | 1.0.23 | MIT | crates.io |
 | zstd | 0.14.3 | BSD-3-Clause | crates.io |

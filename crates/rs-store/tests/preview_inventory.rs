@@ -271,7 +271,7 @@ fn worker_source_rejects_mismatched_duplicated_reference_fields() {
     let mut writer = zip::ZipWriter::new(Cursor::new(Vec::new()));
     for i in 0..archive.len() {
         let mut entry = archive.by_index(i).unwrap();
-        let name = entry.name().to_owned();
+        let name = entry.name().unwrap().into_owned();
         let mut content = Vec::new();
         entry.read_to_end(&mut content).unwrap();
         writer
