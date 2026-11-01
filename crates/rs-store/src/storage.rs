@@ -312,7 +312,10 @@ impl StoreCore {
         let database = directory.join("library.sqlite3");
         if database.is_symlink() { return Err(Error::Value("database cannot be a symbolic link".into())); }
         if database.exists() {
-            let conn = rusqlite::Connection::open_with_flags(&database, rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY)?;
+            // Read-write without create (engine.lock is held): a read-only connection
+            // cannot create the -shm index of a WAL database copied without one,
+            // which macOS's SQLite reports as "unable to open database file".
+            let conn = rusqlite::Connection::open_with_flags(&database, rusqlite::OpenFlags::SQLITE_OPEN_READ_WRITE | rusqlite::OpenFlags::SQLITE_OPEN_NO_MUTEX)?;
             let has_metadata: bool = conn.query_row("SELECT EXISTS(SELECT 1 FROM sqlite_master WHERE type='table' AND name='metadata')", [], |row| row.get(0))?;
             if has_metadata {
                 let version: String = conn.query_row("SELECT value FROM metadata WHERE key='schema_version'", [], |row| row.get(0))?;

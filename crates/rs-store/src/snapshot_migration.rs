@@ -356,7 +356,9 @@ fn verify_committed(store: &DocumentStore, database: &Path, verifier: &dyn Proje
         fn drop(&mut self) { let _ = std::fs::remove_file(&self.0); }
     }
     use base64::{engine::general_purpose::STANDARD, Engine as _};
-    let conn = rusqlite::Connection::open_with_flags(database, rusqlite::OpenFlags::SQLITE_OPEN_READ_ONLY)?;
+    // Read-write without create, as in prepare_schema7: a WAL database without
+    // its -shm cannot be opened read-only on macOS.
+    let conn = rusqlite::Connection::open_with_flags(database, rusqlite::OpenFlags::SQLITE_OPEN_READ_WRITE | rusqlite::OpenFlags::SQLITE_OPEN_NO_MUTEX)?;
     let pending: bool = conn.query_row("SELECT EXISTS(SELECT 1 FROM metadata WHERE key='schema7_vacuum_pending' AND value='true')", [], |r| r.get(0))?;
     if !pending { return Ok(()); }
     let recipe: Option<String> = conn.query_row("SELECT value FROM metadata WHERE key='schema7_projection_recipe'", [], |r| r.get(0)).optional()?;
