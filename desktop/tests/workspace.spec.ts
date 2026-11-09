@@ -870,3 +870,15 @@ test('page settings refresh while open when a pending job finishes at the same r
   await expect(page.getByRole('button',{name:'Pudra pembe'})).toBeEnabled({timeout:10000});
   expect(gets).toBe(2);
 });
+test('dark theme keeps the selected folder in the picker readable',async({page})=>{
+  await setup(page);
+  await page.getByRole('button',{name:'Ayarlar',exact:true}).click();await chooseOption(page,'Tema','dark');await page.getByRole('button',{name:'Ayarları kapat'}).click();
+  await page.getByRole('button',{name:'Klasör oluştur',exact:true}).click();await pickFolder(page,'Üst klasör','Çalışma');
+  const ratio=await folderOption(page,'Üst klasör','Çalışma').evaluate(el=>{
+    const rgb=(v:string)=>(v.match(/[\d.]+/g)||[]).slice(0,3).map(Number);
+    const lum=(c:number[])=>{const [r,g,b]=c.map(x=>{x/=255;return x<=.03928?x/12.92:((x+.055)/1.055)**2.4;});return .2126*r+.7152*g+.0722*b;};
+    const style=getComputedStyle(el);const fg=lum(rgb(style.color)),bg=lum(rgb(style.backgroundColor));
+    return (Math.max(fg,bg)+.05)/(Math.min(fg,bg)+.05);
+  });
+  expect(ratio).toBeGreaterThan(4.5);
+});

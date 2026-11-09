@@ -11,6 +11,10 @@ result was also checked in the official app on a phone or tablet.
 
 ## [Unreleased]
 
+### Fixed
+
+- Dark theme: the selected folder in the folder picker and the sign-in error box were light-on-light and unreadable.
+
 ## [0.0.4-alpha] - 2026-11-01
 
 ### Added
