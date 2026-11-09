@@ -49,7 +49,7 @@ version = 2
 # not reach this project's code paths. Re-check on every sdocx/Tauri bump.
 ignore = [
   # zip 8.2.0, pulled in by sdocx (pinned upstream, `zip = "8.2.0"`) in
-  # tools/ink-renderer and crates/notes-ink-live. All three advisories are
+  # tools/ink-renderer and crates/notes-ink-live. All four advisories are
   # in `ZipArchive::extract` / `ZipStreamReader::extract` (writing entries to
   # disk: symlinks, SUID bits, permissions through symlinks). sdocx only
   # reads entries into memory (`by_name`/`by_index`, sdocx/src/container.rs)
@@ -59,6 +59,9 @@ ignore = [
   { id = "RUSTSEC-2026-0367", reason = "zip extract() only; sdocx reads archives in memory, never extracts (ink-renderer, ink-live)" },
   { id = "RUSTSEC-2026-0368", reason = "zip extract() only; sdocx reads archives in memory, never extracts (ink-renderer, ink-live)" },
   { id = "RUSTSEC-2026-0369", reason = "zip extract() only; sdocx reads archives in memory, never extracts (ink-renderer, ink-live)" },
+  # Same function, published 2026-11-02: extract() sizes a symlink target from
+  # the declared size and aborts on a huge value.
+  { id = "RUSTSEC-2026-0429", reason = "zip extract() symlink-target allocation; sdocx never extracts (ink-renderer, ink-live)" },
   # Unmaintained (no known vulnerability): sdocx text shaping in
   # ink-renderer/ink-live, no maintained drop-in replacement in sdocx yet.
   { id = "RUSTSEC-2026-0206", reason = "rustybuzz unmaintained; transitive via pinned sdocx, no vulnerability" },
