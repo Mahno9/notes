@@ -166,8 +166,8 @@ export function translateUi() {
         ));
       }
 
-      const out = generate(ast, {comments: true}, code);
-      return {code: out.code, map: null};
+      const out = generate(ast, {comments: true, sourceMaps: true, sourceFileName: id}, code);
+      return {code: out.code, map: out.map};
     },
   };
 }

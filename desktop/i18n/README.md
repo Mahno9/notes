@@ -18,9 +18,14 @@ translated.
 ## Switching
 
 Settings → General → Language has **English** and **Türkçe**. The choice is
-stored in `localStorage` (`samsung-notes.language.v1`). The webview reloads
-when it changes so strings evaluated at module load (menus, shortcut lists)
-pick up the new language.
+a device preference (`language` in `/api/preferences`, stored by the engine
+next to the library), because the native window gets a new `127.0.0.1` port
+on every launch and anything the page stores is per origin. Strings are
+evaluated at module load, before preferences arrive, so the last choice is
+also cached in the `notes_lang_v1` cookie (cookies are shared across ports)
+and in `localStorage` for the browser build. If the engine's choice differs
+from the cached one the page reloads once; the webview also reloads after a
+change so menus and shortcut lists pick up the new language.
 
 `NOTLAR_LANG=en` only changes the default for a first launch with no saved
 choice; the in-app switch always works.
