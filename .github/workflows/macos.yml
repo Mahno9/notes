@@ -11,14 +11,23 @@
 # When called by release.yml (workflow_call with `version`), the test jobs are
 # skipped (`if: !inputs.version`) and only `bundle` + `dmg` run.
 #
-# Cost note: macOS minutes are billed at a multiple of Linux minutes on
-# private repositories; the jobs below are split so a failure stops early.
+# Cost note: macOS minutes count at a multiple of Linux minutes. Even on a
+# public repository the gross usage hits the account's $0 budget and GitHub
+# then refuses every job ("account is locked due to a billing issue", seen
+# 2026-11-09). So the full macOS run is weekly, on pushes that touch the
+# platform layer or this file, and by hand (`gh workflow run macos.yml`)
+# before tagging a release. The jobs are split so a failure stops early.
 name: macOS
 
 on:
-  pull_request:
   push:
     branches: [main]
+    paths:
+      - .github/workflows/macos.yml
+      - crates/notes-platform/**
+      - tools/macos/**
+  schedule:
+    - cron: '41 4 * * 1'   # weekly, Monday 04:41 UTC
   workflow_dispatch:
   # Release hook (.github/workflows/release.yml `macos` job): only the dmg
   # jobs run, in release mode, and the disk images are uploaded as exactly
