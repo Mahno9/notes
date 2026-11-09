@@ -356,9 +356,11 @@ tests, HTTP conformance test PASS, PyO3 `rust`/`rust-strict` green).
 - For Mac testers: prerequisites, build (`tools/macos/build_app.sh`), offline test with
   the synthetic library, sign-in with their own account in an isolated directory,
   and what to send back (token-free logs) are in the checklist above.
-- CI: `.github/workflows/macos.yml` (macos-14: cargo test, offline smoke
+- CI: `.github/workflows/macos.yml` (macos-26: cargo test, offline smoke
   test, informational conformance, Playwright Chromium/WebKit, unsigned .app) and the
-  Linux parity job (same tests + darwin compile check).
+  Linux parity job (same tests + darwin compile check). It runs weekly, on pushes that
+  touch `crates/notes-platform`, `tools/macos` or the workflow, and by hand before a
+  release (`gh workflow run macos.yml`); not on every pull request.
 - Distribution: `tools/macos/build_app.sh --release --dmg --version X` produces an unsigned,
   non-notarized `<AppName>-<version>-<arch>.dmg` + `.sha256`;
   release.yml adds it as the `macos-dmg` artifact. First launch: right-click →

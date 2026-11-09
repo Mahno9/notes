@@ -122,7 +122,7 @@ Lock file: `Cargo.lock` (133 packages)
 | rgb | 0.8.53 | MIT | crates.io |
 | roxmltree | 0.21.2 | MIT OR Apache-2.0 | crates.io |
 | rsqlite-vfs | 0.1.1 | MIT | crates.io |
-| rusqlite | 0.41.0 | MIT | crates.io |
+| rusqlite | 0.41.1 | MIT | crates.io |
 | rustversion | 1.0.23 | MIT OR Apache-2.0 | crates.io |
 | scopeguard | 1.2.0 | MIT OR Apache-2.0 | crates.io |
 | serde | 1.0.229 | MIT OR Apache-2.0 | crates.io |
@@ -490,7 +490,7 @@ Lock file: `desktop/src-tauri/Cargo.lock` (471 packages)
 | rgb | 0.8.53 | MIT | crates.io |
 | roxmltree | 0.21.2 | MIT OR Apache-2.0 | crates.io |
 | rsqlite-vfs | 0.1.1 | MIT | crates.io |
-| rusqlite | 0.41.0 | MIT | crates.io |
+| rusqlite | 0.41.1 | MIT | crates.io |
 | rustc-hash | 2.1.3 | Apache-2.0 OR MIT | crates.io |
 | rustc_version | 0.4.1 | MIT OR Apache-2.0 | crates.io |
 | rustix | 1.1.5 | Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT | crates.io |
@@ -925,9 +925,9 @@ Lock file: `crates/notes-ink-live/Cargo.lock` (101 packages)
 
 ## npm: desktop UI
 
-Lock file: `desktop/package-lock.json` (152 packages)
+Lock file: `desktop/package-lock.json` (135 packages)
 
-- MIT: 100
+- MIT: 83
 - Apache-2.0: 25
 - Apache-2.0 OR MIT: 12
 - MPL-2.0: 12
@@ -936,22 +936,9 @@ Lock file: `desktop/package-lock.json` (152 packages)
 
 | Package | Version | License | Origin |
 |---|---|---|---|
-| @babel/code-frame | 8.0.6 | MIT | dev |
-| @babel/generator | 8.1.0 | MIT | dev |
-| @babel/helper-globals | 8.0.6 | MIT | dev |
-| @babel/helper-string-parser | 8.0.8 | MIT | dev |
-| @babel/helper-validator-identifier | 8.0.6 | MIT | dev |
-| @babel/parser | 8.1.0 | MIT | dev |
-| @babel/template | 8.0.0 | MIT | dev |
-| @babel/traverse | 8.1.0 | MIT | dev |
-| @babel/types | 8.1.0 | MIT | dev |
 | @floating-ui/core | 1.8.0 | MIT | runtime (bundled into the UI), optional/platform |
 | @floating-ui/dom | 1.8.0 | MIT | runtime (bundled into the UI), optional/platform |
 | @floating-ui/utils | 0.2.12 | MIT | runtime (bundled into the UI), optional/platform |
-| @jridgewell/gen-mapping | 0.4.0-beta.0 | MIT | dev |
-| @jridgewell/resolve-uri | 3.1.2 | MIT | dev |
-| @jridgewell/sourcemap-codec | 1.6.0 | MIT | dev |
-| @jridgewell/trace-mapping | 0.3.31 | MIT | dev |
 | @oxc-project/types | 0.155.0 | MIT | dev |
 | @playwright/test | 1.64.1 | Apache-2.0 | dev |
 | @rolldown/binding-android-arm-eabi | 1.2.15 | MIT | dev, optional/platform |
@@ -982,35 +969,34 @@ Lock file: `desktop/package-lock.json` (152 packages)
 | @tauri-apps/cli-win32-arm64-msvc | 2.12.4 | Apache-2.0 OR MIT | dev, optional/platform |
 | @tauri-apps/cli-win32-ia32-msvc | 2.12.4 | Apache-2.0 OR MIT | dev, optional/platform |
 | @tauri-apps/cli-win32-x64-msvc | 2.12.4 | Apache-2.0 OR MIT | dev, optional/platform |
-| @tiptap/core | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/extension-blockquote | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/extension-bold | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/extension-bubble-menu | 3.32.0 | MIT | runtime (bundled into the UI), optional/platform |
-| @tiptap/extension-bullet-list | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/extension-code | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/extension-code-block | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/extension-document | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/extension-dropcursor | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/extension-floating-menu | 3.32.0 | MIT | runtime (bundled into the UI), optional/platform |
-| @tiptap/extension-gapcursor | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/extension-hard-break | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/extension-heading | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/extension-horizontal-rule | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/extension-italic | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/extension-link | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/extension-list | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/extension-list-item | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/extension-list-keymap | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/extension-ordered-list | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/extension-paragraph | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/extension-strike | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/extension-text | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/extension-underline | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/extensions | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/pm | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/react | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @tiptap/starter-kit | 3.32.0 | MIT | runtime (bundled into the UI) |
-| @types/jsesc | 2.5.1 | MIT | dev |
+| @tiptap/core | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/extension-blockquote | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/extension-bold | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/extension-bubble-menu | 3.32.1 | MIT | runtime (bundled into the UI), optional/platform |
+| @tiptap/extension-bullet-list | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/extension-code | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/extension-code-block | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/extension-document | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/extension-dropcursor | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/extension-floating-menu | 3.32.1 | MIT | runtime (bundled into the UI), optional/platform |
+| @tiptap/extension-gapcursor | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/extension-hard-break | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/extension-heading | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/extension-horizontal-rule | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/extension-italic | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/extension-link | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/extension-list | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/extension-list-item | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/extension-list-keymap | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/extension-ordered-list | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/extension-paragraph | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/extension-strike | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/extension-text | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/extension-underline | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/extensions | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/pm | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/react | 3.32.1 | MIT | runtime (bundled into the UI) |
+| @tiptap/starter-kit | 3.32.1 | MIT | runtime (bundled into the UI) |
 | @types/react | 19.3.0 | MIT | runtime (bundled into the UI) |
 | @types/react-dom | 19.3.0 | MIT | runtime (bundled into the UI) |
 | @types/use-sync-external-store | 0.0.6 | MIT | runtime (bundled into the UI) |
@@ -1040,8 +1026,6 @@ Lock file: `desktop/package-lock.json` (152 packages)
 | fast-equals | 5.4.5 | MIT | runtime (bundled into the UI) |
 | fdir | 6.5.0 | MIT | dev |
 | fsevents | 2.3.3 | MIT | dev, optional/platform |
-| js-tokens | 10.0.0 | MIT | dev |
-| jsesc | 3.1.0 | MIT | dev |
 | lightningcss | 1.33.0 | MPL-2.0 | dev |
 | lightningcss-android-arm64 | 1.33.0 | MPL-2.0 | dev, optional/platform |
 | lightningcss-darwin-arm64 | 1.33.0 | MPL-2.0 | dev, optional/platform |
@@ -1055,9 +1039,8 @@ Lock file: `desktop/package-lock.json` (152 packages)
 | lightningcss-win32-arm64-msvc | 1.33.0 | MPL-2.0 | dev, optional/platform |
 | lightningcss-win32-x64-msvc | 1.33.0 | MPL-2.0 | dev, optional/platform |
 | linkifyjs | 4.4.0 | MIT | runtime (bundled into the UI) |
-| lucide-react | 1.61.0 | ISC | runtime (bundled into the UI) |
+| lucide-react | 1.64.0 | ISC | runtime (bundled into the UI) |
 | nanoid | 3.3.20 | MIT | dev |
-| obug | 3.0.0 | MIT | dev |
 | orderedmap | 2.1.1 | MIT | runtime (bundled into the UI) |
 | picocolors | 1.1.1 | ISC | dev |
 | picomatch | 4.0.7 | MIT | dev |
